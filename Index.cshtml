@@ -1,0 +1,279 @@
+﻿@model IEnumerable<CollegeEventManager.Models.EventModel>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+<!-- Custom Styles -->
+<style>
+    .event-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .event-card {
+        background: #1a1c24;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: row;
+        color: #ffffff;
+    }
+    
+    .dark-card {
+        background: #1a1c24;
+    }
+    
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.2);
+    }
+    
+    .event-image {
+        width: 35%;
+        height: 280px;
+        object-fit: cover;
+    }
+    
+    .image-left {
+        order: 1;
+    }
+    
+    .image-right {
+        order: 2;
+    }
+    
+    .event-content {
+        width: 65%;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .content-left {
+        order: 2;
+    }
+    
+    .content-right {
+        order: 1;
+    }
+    
+    .event-date {
+        font-size: 14px;
+        color: #aaaaaa;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .event-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #ffffff;
+    }
+    
+    .event-description {
+        color: #cccccc;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .event-meta {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .event-tag {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+    
+    .event-action {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .meta-divider {
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+        margin: 15px 0;
+    }
+    
+    .event-button {
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .event-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+    }
+    
+    .event-button i {
+        margin-right: 5px;
+    }
+    
+    .page-header {
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .add-button {
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .add-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: rgba(26, 28, 36, 0.7);
+        border-radius: 12px;
+        color: #ffffff;
+    }
+    
+    .empty-state i {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #96c93d;
+    }
+
+    .badge-count {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+    @@media (max-width: 768px) {
+        .event-card {
+            flex-direction: column;
+        }
+        
+        .event-image {
+            width: 100%;
+            height: 200px;
+            order: 1;
+        }
+        
+        .event-content {
+            width: 100%;
+            order: 2;
+        }
+    }
+</style>
+
+<div class="event-container">
+    <div class="page-header">
+        <h2>College Events</h2>
+        <a asp-action="Create" class="add-button">
+            <i class="bi bi-plus-circle"></i> New Event
+        </a>
+    </div>
+
+    @{
+        var count = 0;
+    }
+
+    @foreach (var item in Model)
+    {
+        var isEven = count % 2 == 0;
+        var imageClass = isEven ? "image-left" : "image-right";
+        var contentClass = isEven ? "content-right" : "content-left";
+        count++;
+
+        <div class="event-card dark-card">
+            @if (!string.IsNullOrEmpty(item.PosterPath))
+            {
+                <img src="~/uploads/@item.PosterPath" class="event-image @imageClass" alt="Event poster for @item.Title">
+            }
+            else
+            {
+                <div class="event-image @imageClass d-flex align-items-center justify-content-center bg-secondary">
+                    <i class="bi bi-calendar-event" style="font-size: 48px;"></i>
+                </div>
+            }
+
+            <div class="event-content @contentClass">
+                <div class="event-date">
+                    <i class="bi bi-calendar-date me-2"></i> @item.Date.ToString("MMM dd, yyyy")
+                </div>
+                <h3 class="event-title">@item.Title</h3>
+                <div class="meta-divider"></div>
+                <p class="event-description">
+                    @(item.Description != null ? 
+                        (item.Description.Length > 150 ? item.Description.Substring(0, 150) + "..." : item.Description) : 
+                        "No description available.")
+                </p>
+                <div class="event-meta">
+                    <div>
+                        <span class="event-tag"><i class="bi bi-geo-alt"></i> @item.Venue</span>
+                        <span class="event-tag">
+                            <i class="bi bi-people"></i> 
+                            <span class="ms-1 badge-count">@(item.Registrations?.Count ?? 0)</span>
+                        </span>
+                    </div>
+                    <div class="event-action">
+                        <a asp-action="Details" asp-route-id="@item.EventId" class="event-button">
+                            <i class="bi bi-info-circle"></i> View
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-end">
+                    <a asp-action="Edit" asp-route-id="@item.EventId" class="event-button me-2">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.EventId" class="event-button">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <i class="bi bi-calendar-x"></i>
+            <h3>No Events Found</h3>
+            <p>There are no events scheduled at the moment.</p>
+            <a asp-action="Create" class="add-button mt-3">Create Your First Event</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,52 @@
+@model CollegeEventManager.Models.EventModel
+
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<h2>Edit Event</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="EventId" />
+    <input type="hidden" asp-for="PosterPath" /> <!-- Keep existing poster path -->
+    
+    <div class="form-group mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Date" class="form-label"></label>
+        <input asp-for="Date" type="datetime-local" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Venue" class="form-label"></label>
+        <input asp-for="Venue" class="form-control" />
+        <span asp-validation-for="Venue" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="PosterFile" class="form-label">Event Poster</label>
+        @if (!string.IsNullOrEmpty(Model.PosterPath))
+        {
+            <div class="mb-2">
+                <img src="~/uploads/@Model.PosterPath" style="max-width: 200px" class="img-thumbnail" />
+                <p class="small text-muted">Current poster</p>
+            </div>
+        }
+        <input type="file" id="PosterFile" name="PosterFile" class="form-control" accept="image/*" />
+        <span class="text-muted">Upload new poster to replace the existing one (if any)</span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary mt-2">Cancel</a>
+</form>
